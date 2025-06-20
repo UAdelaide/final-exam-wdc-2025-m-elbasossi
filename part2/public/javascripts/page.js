@@ -174,31 +174,32 @@ function downvote(index) {
 }
 
 
-function login(){
+function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-    let user = {
-        user: document.getElementById('username').value,
-        pass: document.getElementById('password').value
-    };
+  // Hardcoded users 
+  const users = [
+    { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
+    { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
+    { username: 'ownerBob', password: 'hashedpassword789', role: 'owner' }
+  ];
 
-    // Create AJAX Request
-    var xmlhttp = new XMLHttpRequest();
+  const user = users.find(u => u.username === username && u.password === password);
 
-    // Define function to run on response
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert("Welcome "+this.responseText);
-        } else if (this.readyState == 4 && this.status >= 400) {
-            alert("Login failed");
-        }
-    };
+  if (user) {
+    // Store role in localStorage (mock session)
+    localStorage.setItem('role', user.role);
 
-    // Open connection to server & send the post data using a POST request
-    // We will cover POST requests in more detail in week 8
-    xmlhttp.open("POST", "/users/login", true);
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.send(JSON.stringify(user));
-
+    // Redirect based on role
+    if (user.role === 'owner') {
+      window.location.href = 'owner-dashboard.html';
+    } else if (user.role === 'walker') {
+      window.location.href = 'walker-dashboard.html';
+    }
+  } else {
+    alert('Login failed');
+  }
 }
 
 function logout(){
