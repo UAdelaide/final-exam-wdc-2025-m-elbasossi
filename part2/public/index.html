@@ -1,29 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dog Walking Service</title>
+  <meta charset="UTF-8" />
+  <title>Dog Walking Service - Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body class="bg-light">
 
-  <div id="app" class="container py-5">
-    <h1 class="mb-4 text-primary">{{ message }}</h1>
-    <p class="lead">Connect with trusted walkers for your beloved dog!</p>
+  <div id="app" class="container py-5" style="max-width: 500px;">
+    <h1 class="mb-4 text-primary text-center">{{ message }}</h1>
+    <p class="text-center lead">Connect with trusted student walkers for your beloved dog!</p>
 
-    <a href="owner-dashboard.html" class="btn btn-outline-primary me-2">Owner Dashboard</a>
-    <a href="walker-dashboard.html" class="btn btn-outline-success">Walker Dashboard</a>
+    <!-- Login form -->
+    <form @submit.prevent="login">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input v-model="username" type="text" id="username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input v-model="password" type="password" id="password" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Log In</button>
+    </form>
+
+    <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
   </div>
 
   <script>
     const { createApp } = Vue;
+
     createApp({
       data() {
         return {
-          message: 'Welcome to the Dog Walking Service!'
+          message: 'Welcome to the Dog Walking Service!',
+          username: '',
+          password: '',
+          error: ''
         };
+      },
+      methods: {
+        async login() {
+          try {
+            const res = await fetch('/users/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ user: this.username, pass: this.password })
+            });
+
+            if (!res.ok) throw new Error('Login failed');
+
+            const role = await res.text(); // return role directly as plain text
+
+            if (role === 'owner') {
+              window.location.href = 'owner-dashboard.html';
+            } else if (role === 'walker') {
+              window.location.href = 'walker-dashboard.html';
+            } else {
+              throw new Error('Invalid role');
+            }
+          } catch (err) {
+            this.error = err.message;
+          }
+        }
       }
     }).mount('#app');
   </script>
