@@ -2,54 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dog App - Chaos Edition</title>
+  <title>Dog of the Day</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <style>
-    body {
-      font-family: Comic Sans MS, cursive;
-      background: linear-gradient(to right, yellow, hotpink);
-      color: lime;
-      text-shadow: 1px 1px black;
-    }
-    .button {
-      background-color: #ff00ff;
-      border: none;
-      color: white;
-      padding: 15px 50px;
-      font-size: 28px;
-      cursor: grab;
-      margin: 10px;
-    }
-    .dog-img {
-      width: 300px;
-      height: 300px;
-      border: 10px dotted red;
-    }
-    .hidden-label {
-      font-size: 2px;
-    }
-  </style>
 </head>
 <body>
   <div id="app">
-    <h1>🐶 Welcome to Dog Zone v7 🐾 (click stuff... maybe)</h1>
+    <h1>Dog App</h1>
 
-    <!-- Breaking cognitive load: Unclear what this does -->
-    <button class="button" @click="loadDog">Surprise Me!!</button>
-    <button class="button" @click="loadDog">Again!!</button>
-    <button class="button" @click="loadDog">Do It Again!!</button>
+    <!-- Still slightly confusing on purpose -->
+    <button @click="loadDog">Click me!</button>
+    <button @click="loadDog">Again?</button>
 
-    <!-- Breaking accessibility: no alt text, no label -->
-    <img v-if="dog" :src="dog" class="dog-img" />
-
-    <!-- Breaking cognitive load: random info with poor structure -->
-    <div>
-      <h2>Meet the dog of the day!</h2>
-      <p>Name: <span style="color: cyan; font-weight: bold;">Mr. Fluffertail Barksalot IV</span></p>
-      <p class="hidden-label">Click the buttons above maybe??</p>
-      <p>He's a good boy. Or girl. IDK. He barks.</p>
-      <p>Breed: FancyDoggoMaximus (Probably)</p>
-      <p>Bio: bork bork bork bork floof snoot smol chaos ball of love and terror 🐾</p>
+    <div v-if="dog">
+      <img :src="dog" />
+      <h2>Dog of the Day</h2>
+      <p>Name: Mystery Woofington</p>
+      <p>Breed: Who Knows</p>
     </div>
   </div>
 
@@ -69,7 +37,7 @@
             const data = await res.json();
             this.dog = data.message;
           } catch (e) {
-            console.error("Dog fetch failed.");
+            console.error('Dog fetch failed.');
           }
         }
       }
