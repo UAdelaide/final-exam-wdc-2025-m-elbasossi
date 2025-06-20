@@ -42,30 +42,31 @@
         };
       },
       methods: {
-  async login() {
-    try {
-      const res = await fetch('/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user: this.username, pass: this.password })
-      });
+      login() {
+        const users = [
+          { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
+          { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
+          { username: 'ownerBob', password: 'hashedpassword789', role: 'owner' }
+        ];
 
-      if (!res.ok) throw new Error('Login failed');
+        const user = users.find(
+          u => u.username === this.username && u.password === this.password
+        );
 
-      const role = await res.text();
+        if (user) {
+          localStorage.setItem('username', user.username);
+          localStorage.setItem('role', user.role);
 
-      if (role === 'owner') {
-        window.location.href = 'owner-dashboard.html';
-      } else if (role === 'walker') {
-        window.location.href = 'walker-dashboard.html';
-      } else {
-        throw new Error('Invalid role');
+          if (user.role === 'owner') {
+            window.location.href = 'owner-dashboard.html';
+          } else {
+            window.location.href = 'walker-dashboard.html';
+          }
+        } else {
+          this.error = 'Login failed';
+        }
       }
-    } catch (err) {
-      this.error = err.message;
     }
-  }
-}
     }).mount('#app');
   </script>
 
