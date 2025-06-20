@@ -128,7 +128,7 @@ let db;
   }
 })();
 
-// ----------------- ROUTES -----------------
+// Routes:
 
 app.get('/api/dogs', async (req, res) => {
   try {
