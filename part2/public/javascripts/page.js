@@ -202,10 +202,10 @@ function login() {
 
 
 function logout() {
-  // Clear localStorage (used for mock session)
+  // Clear localStorage (the pre-existing DB)
   localStorage.clear();
 
-  // If your backend handles real sessions, also send logout request
+  // send logout request
   fetch('/users/logout', { method: 'POST' })
     .finally(() => {
       // Redirect to login regardless of backend response
