@@ -173,7 +173,7 @@ function downvote(index) {
     updatePosts();
 }
 
-
+// Added function for login 
 function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
