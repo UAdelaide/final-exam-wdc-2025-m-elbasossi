@@ -23,10 +23,11 @@
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
             <label class="form-label">Dog ID</label>
+            <!--Added drop down for dog selevc-->
             <select v-model="form.dog_id" class="form-select" required>
-  <option value="" disabled>-- Choose a dog --</option>
-  <option v-for="dog in dogs" :value="dog.dog_id">{{ dog.name }}</option>
-</select>
+            <option value="" disabled>-- Choose a dog --</option>
+            <option v-for="dog in dogs" :value="dog.dog_id">{{ dog.name }}</option>
+          </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
