@@ -42,30 +42,30 @@
         };
       },
       methods: {
-        async login() {
-          try {
-            const res = await fetch('/users/login', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ user: this.username, pass: this.password })
-            });
+  async login() {
+    try {
+      const res = await fetch('/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: this.username, pass: this.password })
+      });
 
-            if (!res.ok) throw new Error('Login failed');
+      if (!res.ok) throw new Error('Login failed');
 
-            const role = await res.text(); 
+      const role = await res.text();
 
-            if (role === 'owner') {
-              window.location.href = 'owner-dashboard.html';
-            } else if (role === 'walker') {
-              window.location.href = 'walker-dashboard.html';
-            } else {
-              throw new Error('Invalid role');
-            }
-          } catch (err) {
-            this.error = err.message;
-          }
-        }
+      if (role === 'owner') {
+        window.location.href = 'owner-dashboard.html';
+      } else if (role === 'walker') {
+        window.location.href = 'walker-dashboard.html';
+      } else {
+        throw new Error('Invalid role');
       }
+    } catch (err) {
+      this.error = err.message;
+    }
+  }
+}
     }).mount('#app');
   </script>
 
