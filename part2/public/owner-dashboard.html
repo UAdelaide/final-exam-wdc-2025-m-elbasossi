@@ -98,17 +98,17 @@
         }
 
         // Added to fetch dogs for the loggedin owner
-        async function loadDogs() {
-    const username = localStorage.getItem('username');
-    if (!username) return;
+          async function loadDogs() {
+            const username = localStorage.getItem('username');
+            if (!username) return;
 
-    try {
-      const res = await fetch(`/api/dogs?owner=${username}`);
-      dogs.value = await res.json();
-    } catch (err) {
-      console.error('Failed to load dogs');
-    }
-  }
+            try {
+              const res = await fetch(`/api/dogs?owner=${username}`);
+              dogs.value = await res.json();
+            } catch (err) {
+              console.error('Failed to load dogs');
+            }
+          }
 
         async function submitWalkRequest() {
           try {
