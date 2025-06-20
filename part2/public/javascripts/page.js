@@ -178,7 +178,6 @@ function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
-  // Hardcoded users
   const users = [
     { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
     { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
@@ -188,27 +187,15 @@ function login() {
   const user = users.find(u => u.username === username && u.password === password);
 
   if (user) {
-    // Store role in localStorage (mock session)
+    localStorage.setItem('username', user.username);
     localStorage.setItem('role', user.role);
 
-    // Redirect based on role
     if (user.role === 'owner') {
       window.location.href = 'owner-dashboard.html';
-    } else if (user.role === 'walker') {
+    } else {
       window.location.href = 'walker-dashboard.html';
     }
   } else {
     alert('Login failed');
   }
-}
-
-function logout(){
-
-    // Create AJAX Request
-    var xmlhttp = new XMLHttpRequest();
-
-    // Open connection to server & send the post data using a POST request
-    xmlhttp.open("POST", "/users/logout", true);
-    xmlhttp.send();
-
 }
