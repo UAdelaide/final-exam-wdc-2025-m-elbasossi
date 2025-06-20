@@ -200,15 +200,3 @@ function login() {
   }
 }
 
-
-function logout() {
-  // Clear localStorage (the pre-existing DB)
-  localStorage.clear();
-
-  // send logout request
-  fetch('/users/logout', { method: 'POST' })
-    .finally(() => {
-      // Redirect to login regardless of backend response
-      window.location.href = 'index.html';
-    });
-}
