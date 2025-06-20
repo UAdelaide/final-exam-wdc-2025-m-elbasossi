@@ -178,7 +178,7 @@ function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
-  // Hardcoded users 
+  // Hardcoded users
   const users = [
     { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
     { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
