@@ -4,20 +4,60 @@
   <meta charset="UTF-8" />
   <title>Dog of the Day</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fefefe;
+      margin: 2rem;
+      color: #333;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .dog-container {
+      margin-top: 2rem;
+      border: 2px dashed #999;
+      padding: 1rem;
+      max-width: 400px;
+    }
+    .dog-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .buttons {
+      margin-top: 1rem;
+    }
+    .buttons button {
+      margin-right: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #f2f2f2;
+      border: 1px solid #aaa;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
 </head>
 <body>
   <div id="app">
-    <h1>Dog App</h1>
+    <h1>Dog of the Day 🐾</h1>
 
-    <!-- Still slightly confusing on purpose -->
-    <button @click="loadDog">Click me!</button>
-    <button @click="loadDog">Again?</button>
+    <!-- Semi-redundant buttons (still breaks kinematic load slightly) -->
+    <div class="buttons">
+      <button @click="loadDog">Show Dog</button>
+      <button @click="loadDog">Load Another</button>
+    </div>
 
-    <div v-if="dog">
+    <!-- No alt attribute (accessibility rule broken) -->
+    <div v-if="dog" class="dog-container">
       <img :src="dog" />
-      <h2>Dog of the Day</h2>
-      <p>Name: Mystery Woofington</p>
-      <p>Breed: Who Knows</p>
+      <h2>Meet: Biscuit the Bold</h2>
+      <p>Breed: Unknown Legend</p>
+      <p>Description: Loves belly rubs and chasing absolutely nothing.</p>
     </div>
   </div>
 
