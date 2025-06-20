@@ -212,26 +212,3 @@ function logout(){
     xmlhttp.send();
 
 }
-
-// Log-in logic:
-app.post('/users/login', async (req, res) => {
-  const { user, pass } = req.body;
-  try {
-    const [rows] = await db.execute(
-      'SELECT role FROM Users WHERE username = ? AND password_hash = ?',
-      [user, pass]
-    );
-
-    if (rows.length === 0) return res.status(401).send('Unauthorized');
-
-    const role = rows[0].role;
-
-    // Save session info
-    req.session.username = user;
-    req.session.role = role;
-
-    res.send(role); // client uses this to redirect
-  } catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
