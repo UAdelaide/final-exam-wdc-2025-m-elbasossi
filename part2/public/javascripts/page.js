@@ -199,3 +199,16 @@ function login() {
     alert('Login failed');
   }
 }
+
+
+function logout() {
+  // Clear localStorage (used for mock session)
+  localStorage.clear();
+
+  // If your backend handles real sessions, also send logout request
+  fetch('/users/logout', { method: 'POST' })
+    .finally(() => {
+      // Redirect to login regardless of backend response
+      window.location.href = 'index.html';
+    });
+}
