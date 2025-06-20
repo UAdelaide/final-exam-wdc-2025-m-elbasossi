@@ -55,16 +55,16 @@
 <body>
   <div id="app">
     <h1>🐶 Welcome to Dogs 🐾</h1>
-    <p class="small-text">click stuff... maybe</p> /* breaks cognitive load: unclear instructions -->
+    <p class="small-text">click stuff... maybe</p> <!-- breaks cognitive load: unclear instructions -->
 
-    <!-- ❌ Kinematic load: 3 buttons that do the exact same thing -->
+    <!-- breaks kinematic load: 3 buttons that do the exact same thing -->
     <div class="buttons">
       <button @click="loadDog">Surprise Me!!</button>
       <button @click="loadDog">Again!!</button>
       <button @click="loadDog">One More Time!!</button>
     </div>
 
-    <!-- ❌ Accessibility: image has no alt attribute -->
+    <!-- breaks accessibility: image has no alt attribute -->
     <img v-if="dog" :src="dog" class="dog-img" />
 
     <div class="bio">
