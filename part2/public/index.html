@@ -52,7 +52,7 @@
 
             if (!res.ok) throw new Error('Login failed');
 
-            const role = await res.text(); // return role directly as plain text
+            const role = await res.text(); 
 
             if (role === 'owner') {
               window.location.href = 'owner-dashboard.html';
