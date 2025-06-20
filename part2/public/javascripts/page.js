@@ -173,7 +173,7 @@ function downvote(index) {
     updatePosts();
 }
 
-// Added function for login 
+// Added function for login (using pre-existing DB as no registration is required)
 function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
