@@ -29,7 +29,7 @@
       padding: 10px 20px;
       background-color: #ffc0cb;
       border: 2px solid #ff69b4;
-      cursor: grab; /* ❌ Accessibility: grab cursor with no drag behavior */
+      cursor: grab; /* breaks accessibility: grab cursor with no drag behavior */
     }
 
     .dog-img {
@@ -47,7 +47,7 @@
     }
 
     .small-text {
-      font-size: 0.5rem; /* ❌ Accessibility: too small to read */
+      font-size: 0.5rem; /* breaks accessibility: too small to read */
       color: #bbb;
     }
   </style>
