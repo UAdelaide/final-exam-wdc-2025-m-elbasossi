@@ -9,26 +9,54 @@
 </head>
 <body class="bg-light">
 
-  <div id="app" class="container py-5" style="max-width: 500px;">
-    <h1 class="mb-4 text-primary text-center">{{ message }}</h1>
-    <p class="text-center lead">Connect with trusted student walkers for your beloved dog!</p>
+  <div id="app" class="container py-5">
+    <div style="max-width: 500px; margin: 0 auto;">
+      <h1 class="mb-4 text-primary text-center">{{ message }}</h1>
+      <p class="text-center lead">Connect with trusted student walkers for your beloved dog!</p>
 
-    <!-- Added log in form-->
-    <form @submit.prevent="login">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input v-model="username" type="text" id="username" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input v-model="password" type="password" id="password" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Log In</button>
-    </form>
+      <!-- Login Form -->
+      <form @submit.prevent="login">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input v-model="username" type="text" id="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input v-model="password" type="password" id="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Log In</button>
+      </form>
 
-    <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+      <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+    </div>
+
+    <!-- Registered Dogs Table -->
+    <h2 class="mt-5">All Registered Dogs</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Dog ID</th>
+          <th>Name</th>
+          <th>Size</th>
+          <th>Owner ID</th>
+          <th>Photo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="dog in dogs" :key="dog.dog_id">
+          <td>{{ dog.dog_id }}</td>
+          <td>{{ dog.name }}</td>
+          <td>{{ dog.size }}</td>
+          <td>{{ dog.owner_id }}</td>
+          <td>
+            <img :src="dog.photo" alt="dog" style="height: 50px;" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
+  <!-- ✅ Vue Script -->
   <script>
     const { createApp } = Vue;
 
@@ -38,37 +66,60 @@
           message: 'Welcome to the Dog Walking Service!',
           username: '',
           password: '',
-          error: ''
+          error: '',
+          dogs: []  // ✅ store all dogs with photos
         };
       },
 
-      // Added login logic
       methods: {
-      login() {
-        const users = [
-          { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
-          { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
-          { username: 'ownerBob', password: 'hashedpassword789', role: 'owner' }
-        ];
+        login() {
+          const users = [
+            { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
+            { username: 'walkerMike', password: 'hashedpassword456', role: 'walker' },
+            { username: 'ownerBob', password: 'hashedpassword789', role: 'owner' }
+          ];
 
-        const user = users.find(
-          u => u.username === this.username && u.password === this.password
-        );
+          const user = users.find(
+            u => u.username === this.username && u.password === this.password
+          );
 
-        if (user) {
-          localStorage.setItem('username', user.username);
-          localStorage.setItem('role', user.role);
+          if (user) {
+            localStorage.setItem('username', user.username);
+            localStorage.setItem('role', user.role);
 
-          if (user.role === 'owner') {
-            window.location.href = 'owner-dashboard.html';
+            if (user.role === 'owner') {
+              window.location.href = 'owner-dashboard.html';
+            } else {
+              window.location.href = 'walker-dashboard.html';
+            }
           } else {
-            window.location.href = 'walker-dashboard.html';
+            this.error = 'Login failed';
           }
-        } else {
-          this.error = 'Login failed';
+        },
+
+        // ✅ Fetch dogs + dog.ceo image
+        async loadDogs() {
+          try {
+            const res = await fetch('/api/dogs');
+            const dogsData = await res.json();
+
+            for (const dog of dogsData) {
+              const imgRes = await fetch('https://dog.ceo/api/breeds/image/random');
+              const img = await imgRes.json();
+              dog.photo = img.message; // ✅ Add photo URL to dog object
+            }
+
+            this.dogs = dogsData;
+          } catch (err) {
+            console.error('Failed to load dogs:', err);
+          }
         }
+      },
+
+      // ✅ Trigger loadDogs on mount
+      mounted() {
+        this.loadDogs();
       }
-    }
     }).mount('#app');
   </script>
 
