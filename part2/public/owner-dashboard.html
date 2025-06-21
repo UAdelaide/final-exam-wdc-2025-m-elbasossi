@@ -72,84 +72,85 @@
   </div>
 
   <script>
-    const { createApp, ref, onMounted } = Vue;
+  const { createApp, ref, onMounted } = Vue;
 
-    createApp({
-      setup() {
-        const form = ref({
-        const dogs = ref([]);
-          dog_id: '',
-          requested_time: '',
-          duration_minutes: '',
-          location: ''
-        });
+  createApp({
+    setup() {
+      const dogs = ref([]); // ✅ moved here
+      const form = ref({
+        dog_id: '',
+        requested_time: '',
+        duration_minutes: '',
+        location: ''
+      });
 
-        const walks = ref([]);
-        const message = ref('');
-        const error = ref('');
+      const walks = ref([]);
+      const message = ref('');
+      const error = ref('');
 
-        async function loadWalks() {
-          try {
-            const res = await fetch('/api/walks');
-            walks.value = await res.json();
-          } catch (err) {
-            error.value = 'Failed to load walk requests';
-          }
+      async function loadWalks() {
+        try {
+          const res = await fetch('/api/walks');
+          walks.value = await res.json();
+        } catch (err) {
+          error.value = 'Failed to load walk requests';
         }
-
-        // Added to fetch dogs for the loggedin owner
-          async function loadDogs() {
-            const username = localStorage.getItem('username');
-            if (!username) return;
-
-            try {
-              const res = await fetch(`/api/dogs?owner=${username}`);
-              dogs.value = await res.json();
-            } catch (err) {
-              console.error('Failed to load dogs');
-            }
-          }
-
-        async function submitWalkRequest() {
-          try {
-            const res = await fetch('/api/walks', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(form.value)
-            });
-            const result = await res.json();
-
-            if (!res.ok) throw new Error(result.error || 'Error submitting walk request');
-
-            message.value = result.message;
-            error.value = '';
-            form.value = {
-              dog_id: '',
-              requested_time: '',
-              duration_minutes: '',
-              location: ''
-            };
-            loadWalks();
-          } catch (err) {
-            error.value = err.message;
-            message.value = '';
-          }
-        }
-
-        onMounted(() => {
-          loadWalks();
-        });
-
-        return {
-          form,
-          walks,
-          message,
-          error,
-          submitWalkRequest
-        };
       }
-    }).mount('#app');
-  </script>
+
+      async function loadDogs() {
+        const username = localStorage.getItem('username');
+        if (!username) return;
+
+        try {
+          const res = await fetch(`/api/dogs?owner=${username}`);
+          dogs.value = await res.json();
+        } catch (err) {
+          console.error('Failed to load dogs');
+        }
+      }
+
+      async function submitWalkRequest() {
+        try {
+          const res = await fetch('/api/walks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form.value)
+          });
+          const result = await res.json();
+
+          if (!res.ok) throw new Error(result.error || 'Error submitting walk request');
+
+          message.value = result.message;
+          error.value = '';
+          form.value = {
+            dog_id: '',
+            requested_time: '',
+            duration_minutes: '',
+            location: ''
+          };
+          loadWalks();
+        } catch (err) {
+          error.value = err.message;
+          message.value = '';
+        }
+      }
+
+      onMounted(() => {
+        loadWalks();
+        loadDogs(); // added
+      });
+
+      return {
+        form,
+        walks,
+        message,
+        error,
+        submitWalkRequest,
+        dogs // ✅ return this
+      };
+    }
+  }).mount('#app');
+</script>
   <script>
     // Logout logic
   function logout() {
