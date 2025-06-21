@@ -77,6 +77,7 @@
     createApp({
       setup() {
         const form = ref({
+        const dogs = ref([]);
           dog_id: '',
           requested_time: '',
           duration_minutes: '',
@@ -138,7 +139,7 @@
 
         onMounted(() => {
           loadWalks();
-          loadDogs(); // added 
+          loadDogs(); // added
         });
 
         return {
