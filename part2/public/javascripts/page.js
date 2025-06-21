@@ -199,19 +199,3 @@ function login() {
     alert('Login failed');
   }
 }
-
-// Added dog databse
-casync function loadDogs() {
-  const username = localStorage.getItem('username');
-  if (!username) return;
-
-  const dogDB = [
-    { dog_id: 1, name: 'Buddy', size: 'medium', owner: 'ownerJane' },
-    { dog_id: 2, name: 'Lucy', size: 'small', owner: 'ownerJane' },
-    { dog_id: 3, name: 'Rocky', size: 'large', owner: 'ownerBob' },
-    { dog_id: 4, name: 'Daisy', size: 'medium', owner: 'ownerBob' },
-    { dog_id: 5, name: 'Milo', size: 'small', owner: 'ownerBob' }
-  ];
-
-  dogs.value = dogDB.filter(dog => dog.owner === username);
-}
