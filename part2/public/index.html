@@ -56,7 +56,7 @@
     </table>
   </div>
 
-  <!-- ✅ Vue Script -->
+  <!-- Vue Script -->
   <script>
     const { createApp } = Vue;
 
@@ -67,7 +67,7 @@
           username: '',
           password: '',
           error: '',
-          dogs: []  // ✅ store all dogs with photos
+          dogs: []  // store all dogs with photos
         };
       },
 
@@ -97,7 +97,7 @@
           }
         },
 
-        // ✅ Fetch dogs + dog.ceo image
+        // Fetch dogs + image
         async loadDogs() {
           try {
             const res = await fetch('/api/dogs');
@@ -106,7 +106,7 @@
             for (const dog of dogsData) {
               const imgRes = await fetch('https://dog.ceo/api/breeds/image/random');
               const img = await imgRes.json();
-              dog.photo = img.message; // ✅ Add photo URL to dog object
+              dog.photo = img.message; // Add photo URL to dog object
             }
 
             this.dogs = dogsData;
