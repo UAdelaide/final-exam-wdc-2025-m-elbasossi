@@ -27,12 +27,11 @@
         <button type="submit" class="btn btn-primary w-100">Log In</button>
       </form>
 
-      <!-- Error Message -->
       <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
     </div>
 
     <!-- Registered Dogs Table -->
-    <h2 class="mt-5 fw-bold">All Registered Dogs</h2>
+    <h2 class="mt-5">All Registered Dogs</h2>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -73,7 +72,7 @@
       },
 
       methods: {
-        // Login using dummy user DB
+        // Login with hardcoded users
         login() {
           const users = [
             { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
@@ -99,29 +98,23 @@
           }
         },
 
-        // Load dogs from /api/dogs + add random image from Dog CEO API
+        // Fetch dogs with image API and hardcoded fallback data
         async loadDogs() {
           try {
-            const res = await fetch('/api/dogs');
-            const dogsData = await res.json();
+            // Hardcoded list of dogs
+            const dogsData = [
+              { dog_id: 1, name: 'Buddy', size: 'medium', owner_id: 1 },
+              { dog_id: 2, name: 'Lucy', size: 'small', owner_id: 1 },
+              { dog_id: 3, name: 'Rocky', size: 'large', owner_id: 3 },
+              { dog_id: 4, name: 'Daisy', size: 'medium', owner_id: 3 },
+              { dog_id: 5, name: 'Milo', size: 'small', owner_id: 3 }
+            ];
 
-            // If no data returned, use dummy data
-            if (!dogsData || dogsData.length === 0) {
-              console.warn('No dogs returned from /api/dogs. Using dummy data.');
-              // Temporary hardcoded dog list
-              dogsData.push(
-                { dog_id: 1, name: 'Buddy', size: 'medium', owner_id: 1 },
-                { dog_id: 2, name: 'Lucy', size: 'small', owner_id: 1 },
-                { dog_id: 3, name: 'Rocky', size: 'large', owner_id: 3 },
-                { dog_id: 4, name: 'Daisy', size: 'medium', owner_id: 3 },
-                { dog_id: 5, name: 'Milo', size: 'small', owner_id: 3 }
-              );
-            }
-
+            // Fetch random dog image for each one
             for (const dog of dogsData) {
               const imgRes = await fetch('https://dog.ceo/api/breeds/image/random');
               const img = await imgRes.json();
-              dog.photo = img.message; // Add random photo
+              dog.photo = img.message; // Add image URL
             }
 
             this.dogs = dogsData;
@@ -131,7 +124,7 @@
         }
       },
 
-      // Load dog list on page load
+      // Run on page load
       mounted() {
         this.loadDogs();
       }
