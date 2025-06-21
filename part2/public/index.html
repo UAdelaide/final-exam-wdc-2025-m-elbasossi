@@ -11,11 +11,11 @@
 
   <div id="app" class="container py-5">
     <!-- Login Section -->
-    <div style="max-width: 500px; margin: 0 auto;">
+    <div class="mx-auto mb-5" style="max-width: 400px;">
       <h1 class="mb-4 text-primary text-center">{{ message }}</h1>
       <p class="text-center lead">Connect with trusted student walkers for your beloved dog!</p>
 
-      <!-- Added log in form-->
+      <!-- Login Form -->
       <form @submit.prevent="login">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
@@ -31,16 +31,16 @@
       <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
     </div>
 
-    <!-- Added table of all registered dogs + photos -->
-    <div class="mt-5">
-      <h2 class="mb-3">All Registered Dogs</h2>
-      <table class="table table-striped">
-        <thead>
+    <!-- Dog Table Section -->
+    <h3 class="mb-3">All Registered Dogs</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
           <tr>
             <th>Dog ID</th>
             <th>Name</th>
             <th>Size</th>
-            <th>Owner</th>
+            <th>Owner ID</th>
             <th>Photo</th>
           </tr>
         </thead>
@@ -49,9 +49,9 @@
             <td>{{ dog.dog_id }}</td>
             <td>{{ dog.name }}</td>
             <td>{{ dog.size }}</td>
-            <td>{{ dog.owner }}</td>
+            <td>{{ dog.owner_id }}</td>
             <td>
-              <img :src="dog.photo" alt="dog" style="height: 60px; width: 60px; object-fit: cover;" />
+              <img :src="dog.photo" alt="dog" style="height: 60px; object-fit: cover;" />
             </td>
           </tr>
         </tbody>
@@ -59,7 +59,7 @@
     </div>
   </div>
 
-  <!-- Vue logic -->
+  <!-- Vue Script -->
   <script>
     const { createApp } = Vue;
 
@@ -70,12 +70,12 @@
           username: '',
           password: '',
           error: '',
-          dogs: [] // store all dogs with photos
+          dogs: []  // store all dogs with photo
         };
       },
 
-      // Added login logic
       methods: {
+        // Login logic
         login() {
           const users = [
             { username: 'ownerJane', password: 'hashedpassword123', role: 'owner' },
@@ -101,16 +101,17 @@
           }
         },
 
-        // Fetch dogs from /api/dogs and get random photo for each
+        // Fetch dogs + random image for each
         async loadDogs() {
           try {
             const res = await fetch('/api/dogs');
             const dogsData = await res.json();
 
+            // Add dog image to each dog
             for (const dog of dogsData) {
               const imgRes = await fetch('https://dog.ceo/api/breeds/image/random');
               const img = await imgRes.json();
-              dog.photo = img.message; // Add photo URL to dog object
+              dog.photo = img.message;
             }
 
             this.dogs = dogsData;
@@ -120,9 +121,8 @@
         }
       },
 
-      // Trigger loadDogs on mount
       mounted() {
-        this.loadDogs();
+        this.loadDogs();  // Fetch dogs on page load
       }
     }).mount('#app');
   </script>
