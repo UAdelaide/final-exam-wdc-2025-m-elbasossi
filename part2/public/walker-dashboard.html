@@ -11,7 +11,7 @@
   <div id="app" class="container py-4">
     <h1 class="mb-4 text-success">Walker Dashboard</h1>
 
-    <!--Added log out button-->
+    <!-- Logout button -->
     <button onclick="logout()" class="btn btn-danger float-end">Logout</button>
 
     <!-- Alert messages -->
@@ -30,7 +30,7 @@
               <strong>Location:</strong> {{ walk.location }}<br>
               <strong>Owner:</strong> {{ walk.owner_name }}
             </p>
-            <button type=button class="btn btn-outline-success" @click="applyToWalk(walk.request_id)">Apply</button>
+            <button type="button" class="btn btn-outline-success" @click="applyToWalk(walk.request_id)">Apply</button>
           </div>
         </div>
       </div>
@@ -46,7 +46,19 @@
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
-        const user = 3;
+
+        // ✅ Get current user ID dynamically
+        async function getCurrentUser() {
+          try {
+            const res = await fetch('/api/users/me');
+            if (!res.ok) throw new Error('Failed to get current user');
+            const user = await res.json();
+            return user.user_id;
+          } catch (err) {
+            console.error(err);
+            throw err;
+          }
+        }
 
         async function loadWalkRequests() {
           try {
@@ -60,11 +72,14 @@
 
         async function applyToWalk(requestId) {
           try {
+            const userId = await getCurrentUser(); // added
+
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ walker_id: user })
+              body: JSON.stringify({ walker_id: userId }) // added
             });
+
             const result = await res.json();
 
             if (!res.ok) throw new Error(result.error || 'Application failed');
@@ -89,15 +104,15 @@
         };
       }
     }).mount('#app');
-
   </script>
+
   <script>
     // Logout logic
-  function logout() {
-    localStorage.clear();
-    window.location.href = 'index.html';
-  }
-</script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
