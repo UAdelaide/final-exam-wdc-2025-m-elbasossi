@@ -10,11 +10,12 @@
 <body class="bg-light">
 
   <div id="app" class="container py-5">
+    <!-- Login Section -->
     <div style="max-width: 500px; margin: 0 auto;">
       <h1 class="mb-4 text-primary text-center">{{ message }}</h1>
       <p class="text-center lead">Connect with trusted student walkers for your beloved dog!</p>
 
-      <!-- Login Form -->
+      <!-- Added log in form-->
       <form @submit.prevent="login">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
@@ -30,33 +31,35 @@
       <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
     </div>
 
-    <!-- Registered Dogs Table -->
-    <h2 class="mt-5">All Registered Dogs</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Dog ID</th>
-          <th>Name</th>
-          <th>Size</th>
-          <th>Owner ID</th>
-          <th>Photo</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="dog in dogs" :key="dog.dog_id">
-          <td>{{ dog.dog_id }}</td>
-          <td>{{ dog.name }}</td>
-          <td>{{ dog.size }}</td>
-          <td>{{ dog.owner_id }}</td>
-          <td>
-            <img :src="dog.photo" alt="dog" style="height: 50px;" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Added table of all registered dogs + photos -->
+    <div class="mt-5">
+      <h2 class="mb-3">All Registered Dogs</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Dog ID</th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Owner</th>
+            <th>Photo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="dog in dogs" :key="dog.dog_id">
+            <td>{{ dog.dog_id }}</td>
+            <td>{{ dog.name }}</td>
+            <td>{{ dog.size }}</td>
+            <td>{{ dog.owner }}</td>
+            <td>
+              <img :src="dog.photo" alt="dog" style="height: 60px; width: 60px; object-fit: cover;" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Vue Script -->
+  <!-- Vue logic -->
   <script>
     const { createApp } = Vue;
 
@@ -67,10 +70,11 @@
           username: '',
           password: '',
           error: '',
-          dogs: []  // store all dogs with photos
+          dogs: [] // store all dogs with photos
         };
       },
 
+      // Added login logic
       methods: {
         login() {
           const users = [
@@ -97,7 +101,7 @@
           }
         },
 
-        // Fetch dogs + image
+        // Fetch dogs from /api/dogs and get random photo for each
         async loadDogs() {
           try {
             const res = await fetch('/api/dogs');
