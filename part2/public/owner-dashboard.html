@@ -76,7 +76,7 @@
 
   createApp({
     setup() {
-      const dogs = ref([]); // ✅ moved here
+      const dogs = ref([]); // added
       const form = ref({
         dog_id: '',
         requested_time: '',
@@ -146,7 +146,7 @@
         message,
         error,
         submitWalkRequest,
-        dogs // ✅ return this
+        dogs // added
       };
     }
   }).mount('#app');
