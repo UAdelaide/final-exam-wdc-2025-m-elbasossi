@@ -11,25 +11,22 @@
   <div id="app" class="container py-4">
     <h1 class="mb-4 text-primary">Owner Dashboard</h1>
 
-    <!--Added log out button-->
+    <!-- Logout button -->
     <button onclick="logout()" class="btn btn-danger float-end">Logout</button>
 
     <!-- Walk request form -->
     <div class="card mb-4">
-      <div class="card-header bg-primary text-white">
-        Create New Walk Request
-      </div>
+      <div class="card-header bg-primary text-white">Create New Walk Request</div>
       <div class="card-body">
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <!--Added drop down for dog selection-->
+            <label class="form-label">Select Your Dog</label>
             <select v-model="form.dog_id" class="form-select" required>
-            <option disabled value="">-- Choose a dog --</option>
-            <option v-for="dog in dogs" :key="dog.dog_id" :value="dog.dog_id">
-              {{ dog.name }}
-            </option>
-          </select>
+              <option disabled value="">-- Choose a dog --</option>
+              <option v-for="dog in dogs" :key="dog.dog_id" :value="dog.dog_id">
+                {{ dog.name }}
+              </option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -48,11 +45,11 @@
       </div>
     </div>
 
-    <!-- Success or error messages -->
+    <!-- Messages -->
     <div v-if="message" class="alert alert-info">{{ message }}</div>
     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
-    <!-- List of walk requests -->
+    <!-- Walk Requests -->
     <h2 class="mb-3">My Walk Requests</h2>
     <div class="row" v-if="walks.length > 0">
       <div class="col-md-6 mb-4" v-for="walk in walks" :key="walk.request_id">
@@ -73,92 +70,97 @@
     <p v-else>No walk requests yet.</p>
   </div>
 
+  <!-- VUE APP -->
   <script>
-  const { createApp, ref, onMounted } = Vue;
+    const { createApp, ref, onMounted } = Vue;
 
-  createApp({
-    setup() {
-    const form = ref({
-      dog_id: '',
-      requested_time: '',
-      duration_minutes: '',
-      location: ''
-    });
-      const dogs = ref([]); // added
-      const walks = ref([]);
-      const message = ref('');
-      const error = ref('');
+    createApp({
+      setup() {
+        const form = ref({
+          dog_id: '',
+          requested_time: '',
+          duration_minutes: '',
+          location: ''
+        });
 
-      async function loadWalks() {
-        try {
-          const res = await fetch('/api/walks');
-          walks.value = await res.json();
-        } catch (err) {
-          error.value = 'Failed to load walk requests';
+        const dogs = ref([]);
+        const walks = ref([]);
+        const message = ref('');
+        const error = ref('');
+
+        async function loadWalks() {
+          try {
+            const res = await fetch('/api/walks');
+            walks.value = await res.json();
+          } catch (err) {
+            error.value = 'Failed to load walk requests';
+          }
         }
-      }
 
-      async function loadDogs() {
-        const username = localStorage.getItem('username');
-        if (!username) return;
-
-        try {
-          const res = await fetch(`/api/dogs?owner=${username}`);
-          dogs.value = await res.json();
-        } catch (err) {
-          console.error('Failed to load dogs');
+        // dogDB instead of fetch
+        function loadDogs() {
+          const username = localStorage.getItem('username');
+          const dogDB = [
+            { dog_id: 1, name: 'Buddy', size: 'medium', owner: 'ownerJane' },
+            { dog_id: 2, name: 'Lucy', size: 'small', owner: 'ownerJane' },
+            { dog_id: 3, name: 'Rocky', size: 'large', owner: 'ownerBob' },
+            { dog_id: 4, name: 'Daisy', size: 'medium', owner: 'ownerBob' },
+            { dog_id: 5, name: 'Milo', size: 'small', owner: 'ownerBob' }
+          ];
+          dogs.value = dogDB.filter(dog => dog.owner === username);
         }
-      }
 
-      async function submitWalkRequest() {
-        try {
-          const res = await fetch('/api/walks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(form.value)
-          });
-          const result = await res.json();
+        async function submitWalkRequest() {
+          try {
+            const res = await fetch('/api/walks', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(form.value)
+            });
+            const result = await res.json();
 
-          if (!res.ok) throw new Error(result.error || 'Error submitting walk request');
+            if (!res.ok) throw new Error(result.error || 'Error submitting walk request');
 
-          message.value = result.message;
-          error.value = '';
-          form.value = {
-            dog_id: '',
-            requested_time: '',
-            duration_minutes: '',
-            location: ''
-          };
+            message.value = result.message;
+            error.value = '';
+            form.value = {
+              dog_id: '',
+              requested_time: '',
+              duration_minutes: '',
+              location: ''
+            };
+            loadWalks();
+          } catch (err) {
+            error.value = err.message;
+            message.value = '';
+          }
+        }
+
+        onMounted(() => {
           loadWalks();
-        } catch (err) {
-          error.value = err.message;
-          message.value = '';
-        }
+          loadDogs(); // ✅ called correctly now
+        });
+
+        return {
+          form,
+          dogs, // ✅ returned
+          walks,
+          message,
+          error,
+          submitWalkRequest
+        };
       }
+    }).mount('#app');
+  </script>
 
-      onMounted(() => {
-        loadWalks();
-        loadDogs(); // added
-      });
-
-      return {
-        form,
-        walks,
-        message,
-        error,
-        submitWalkRequest,
-        dogs // added
-      };
-    }
-  }).mount('#app');
-</script>
+  <!-- Logout -->
   <script>
-    // Logout logic
-  function logout() {
-    localStorage.clear();
-    window.location.href = 'index.html';
-  }
-</script>
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'index.html';
+    }
+  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
