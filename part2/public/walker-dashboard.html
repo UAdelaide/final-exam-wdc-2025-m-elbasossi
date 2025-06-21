@@ -47,7 +47,7 @@
         const message = ref('');
         const error = ref('');
 
-        // ✅ Get current user ID dynamically
+        // Added to get current user dynamically
         async function getCurrentUser() {
           try {
             const res = await fetch('/api/users/me');
