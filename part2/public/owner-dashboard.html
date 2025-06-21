@@ -97,7 +97,7 @@
           }
         }
 
-        // dogDB instead of fetch
+        // Dog database added
         function loadDogs() {
           const username = localStorage.getItem('username');
           const dogDB = [
@@ -138,12 +138,12 @@
 
         onMounted(() => {
           loadWalks();
-          loadDogs(); // ✅ called correctly now
+          loadDogs(); // added
         });
 
         return {
           form,
-          dogs, // ✅ returned
+          dogs, // added
           walks,
           message,
           error,
